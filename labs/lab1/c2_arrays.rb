@@ -15,7 +15,7 @@ end
 
 # Exercise 2: Array methods
 # Add an element to the end of an array and return the modified array
-# Expected: add_element([1, 2, 3], 4) => [1, 2, 3, 4]
+# Expected: add_element([1, 2, 3], 4) => [1, 2, 3, 4].
 def add_element(arr, element)
   # TODO: Use .push or << operator (modify and return the array)
   nil
