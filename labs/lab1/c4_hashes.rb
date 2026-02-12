@@ -10,24 +10,22 @@
 # Create a hash with given keys and values, then return the value for a specific key
 # Expected: get_value({ name: "Alice", age: 25 }, :name) => "Alice"
 def get_value(hash, key)
-  # TODO: Access hash value using hash[key]
-  nil
+  return hash[key]
 end
 
 # Exercise 2: Hash modification
 # Add a new key-value pair to a hash and return it
 # Expected: add_pair({ a: 1 }, :b, 2) => { a: 1, b: 2 }
 def add_pair(hash, key, value)
-  # TODO: Add new pair using hash[key] = value
-  nil
+  hash[key] = value
+  return hash
 end
 
 # Exercise 3: Hash keys and values
 # Return an array of all keys from a hash
 # Expected: get_keys({ name: "Bob", age: 30, city: "NYC" }) => [:name, :age, :city]
 def get_keys(hash)
-  # TODO: Use .keys method
-  nil
+  hash.keys
 end
 
 # Exercise 4: Hash iteration
@@ -35,7 +33,7 @@ end
 # Expected: double_values({ a: 1, b: 2, c: 3 }) => { a: 2, b: 4, c: 6 }
 def double_values(hash)
   # TODO: Use .transform_values or .each_with_object
-  nil
+  res = hash.transform_values{|num| num *= 2}
 end
 
 # Exercise 5: Hash filtering
@@ -43,7 +41,8 @@ end
 # Expected: filter_by_value({ a: 10, b: 5, c: 15 }, 8) => { a: 10, c: 15 }
 def filter_by_value(hash, threshold)
   # TODO: Use .select method
-  nil
+  res = hash.select{|k, v| v > threshold}
+  return res
 end
 
 # Exercise 6: Hash merging
@@ -51,7 +50,8 @@ end
 # Expected: merge_hashes({ a: 1, b: 2 }, { b: 3, c: 4 }) => { a: 1, b: 3, c: 4 }
 def merge_hashes(hash1, hash2)
   # TODO: Use .merge method
-  nil
+  res = hash1.merge(hash2)
+  return res
 end
 
 # Exercise 7: Hash existence check
@@ -59,7 +59,7 @@ end
 # Expected: has_key?({ name: "Alice", age: 25 }, :name) => true
 def has_key?(hash, key)
   # TODO: Use .has_key? or .key? method
-  nil
+  hash.has_key?(key)
 end
 
 # Exercise 8: Working with nested hashes
@@ -67,7 +67,7 @@ end
 # Expected: nested_value({ user: { name: "John", age: 30 } }, :user, :name) => "John"
 def nested_value(hash, key1, key2)
   # TODO: Access nested hash using hash[key1][key2] or .dig method
-  nil
+  hash[key1][key2]
 end
 
 # ============================================
