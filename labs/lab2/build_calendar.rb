@@ -1,13 +1,13 @@
 require "date"
 TIMES = ["12:00", "15:00", "18:00"].freeze
-ALLOWED_WEEKDAYS = [5, 6, 7].freeze
+ALLOWED_WEEKDAYS = [5, 6, 0].freeze
 
 
- if ARGV.length != 4
+if ARGV.length != 4
    puts "Bad input: amount of args"
    exit
 end 
-
+# функция для парсинга команд из текстового файла
 def read_teams(path)
   unless File.exist?(path) && File.file?(path) && File.readable?(path)
     puts "Bad input"
@@ -24,25 +24,99 @@ def read_teams(path)
     end 
     
     teams << [parts[0], parts[1]]
-
-  end 
+    
+  end
+  if teams.length < 2
+      puts "Not enought teams"
+      exit
+    end
+  teams
+end
 
 teams_file = ARGV[0]
 start_date = ARGV[1]
 end_date = ARGV[2]
 calendar = ARGV[3]
 
-start_date = DateTime.strptime(start_date, "%d.%m.%Y")
-end_date = DateTime.strptime(end_date, "%d.%m.%Y")
+start_date = Date.strptime(start_date, "%d.%m.%Y")
+end_date = Date.strptime(end_date, "%d.%m.%Y")
 
 if start_date > end_date
   puts "Bad input: wrond dates"
   exit
 end
 
-if !File.exists?(teams_file) || !File.readable?(teams_file)
-  puts "Bad input: wrong teams file"
-  exit
+teams = read_teams(teams_file)
+
+matches = []
+
+# генерируем всевозможные пары
+for i in 0...teams.length
+  for j in (i+1)...teams.length
+    matches << [teams[i], teams[j]]
+  end
 end
 
+current = start_date
 
+# создаем слоты для игр
+slots = []
+while current <= end_date
+  if !ALLOWED_WEEKDAYS.include?(current.wday)
+    current += 1
+    next
+  end
+  slots << [current, TIMES[0]]
+  slots << [current, TIMES[1]]
+  slots << [current, TIMES[2]]
+  current += 1
+end
+
+slots2 = []
+
+slots.each do |s|
+  slots << {
+    date: s[0],
+    time: s[1],
+    games: []
+  }
+end
+
+match_index = 0
+slot_index = 0
+
+while match_index < matches.length
+  while slot_index < slot2.length && slots2[slot_index][:games].length >= 2
+    slot_index += 1
+  end
+   if slot_index == slots2.length
+    puts "Bad input: not enough slots"
+    exit
+  end
+  slots2[slot_index][:games] << matches[match_index]
+  match_index += 1
+end
+
+busy = slots2.select { |s| !s[:games].empty? }
+
+busy.sort_by! { |s| [s[:date], s[:time]] }
+
+File.open(calendar, "w") do |f|
+  current_date = nil
+
+  busy.each do |slot|
+    if current_date != slot[:date]
+      current_date = slot[:date]
+      f.puts current_date.strftime("%d.%m.%Y")
+    end
+
+    slot[:games].each do |match|
+      a = match[0] # [name, city]
+      b = match[1]
+
+      f.puts "  #{slot[:time]} #{a[0]} (#{a[1]}) vs #{b[0]} (#{b[1]})"
+    end
+  end
+end
+
+puts "Written to #{calendar}"
