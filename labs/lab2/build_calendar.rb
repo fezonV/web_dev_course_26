@@ -38,8 +38,13 @@ start_date = ARGV[1]
 end_date = ARGV[2]
 calendar = ARGV[3]
 
-start_date = Date.strptime(start_date, "%d.%m.%Y")
-end_date = Date.strptime(end_date, "%d.%m.%Y")
+begin
+  start_date = Date.strptime(start_date, "%d.%m.%Y")
+  end_date = Date.strptime(end_date, "%d.%m.%Y")
+rescue ArgumentError
+  puts "Bad input: wrong date format (use DD.MM.YYYY)"
+  exit 1
+end
 
 if start_date > end_date
   puts "Bad input: wrond dates"
@@ -75,28 +80,47 @@ end
 slots2 = []
 
 slots.each do |s|
-  slots << {
+  slots2 << {
     date: s[0],
     time: s[1],
     games: []
   }
 end
 
-match_index = 0
-slot_index = 0
+capacity = slots2.length
 
-while match_index < matches.length
-  while slot_index < slot2.length && slots2[slot_index][:games].length >= 2
-    slot_index += 1
-  end
-   if slot_index == slots2.length
-    puts "Bad input: not enough slots"
-    exit
-  end
-  slots2[slot_index][:games] << matches[match_index]
-  match_index += 1
+if matches.length > capacity * 2
+  puts "Bad input: not enough slots"
+  exit 1
 end
 
+if matches.empty?
+  puts "No matches"
+  exit 1
+end
+if slots2.empty?
+  puts "No playable dates in range"
+  exit 1
+end
+step = capacity.to_f / matches.length
+position = 0.0
+
+matches.each do |match|
+  slot_index = position.floor
+
+  # если в слоте уже 2 игры -> ищем следующий
+while slot_index < slots2.length && slots2[slot_index][:games].length >= 2
+  slot_index += 1
+end
+
+if slot_index == slots2.length
+  puts "Bad input: not enough slots"
+  exit 1
+end
+
+  slots2[slot_index][:games] << match
+  position += step
+end
 busy = slots2.select { |s| !s[:games].empty? }
 
 busy.sort_by! { |s| [s[:date], s[:time]] }
