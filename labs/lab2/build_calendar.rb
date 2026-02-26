@@ -4,8 +4,8 @@ ALLOWED_WEEKDAYS = [5, 6, 0].freeze
 
 
 if ARGV.length != 4
-   puts "Bad input: amount of args"
-   exit
+  puts "Bad input: amount of args"
+  exit
 end 
 # функция для парсинга команд из текстового файла
 def read_teams(path)
@@ -27,9 +27,9 @@ def read_teams(path)
     
   end
   if teams.length < 2
-      puts "Not enought teams"
-      exit
-    end
+    puts "Not enought teams"
+    exit
+  end
   teams
 end
 
@@ -109,14 +109,14 @@ matches.each do |match|
   slot_index = position.floor
 
   # если в слоте уже 2 игры -> ищем следующий
-while slot_index < slots2.length && slots2[slot_index][:games].length >= 2
-  slot_index += 1
-end
+  while slot_index < slots2.length && slots2[slot_index][:games].length >= 2
+    slot_index += 1
+  end
 
-if slot_index == slots2.length
-  puts "Bad input: not enough slots"
-  exit 1
-end
+  if slot_index == slots2.length
+    puts "Bad input: not enough slots"
+    exit 1
+  end
 
   slots2[slot_index][:games] << match
   position += step
@@ -135,7 +135,7 @@ File.open(calendar, "w") do |f|
     end
 
     slot[:games].each do |match|
-      a = match[0] # [name, city]
+      a = match[0]
       b = match[1]
 
       f.puts "  #{slot[:time]} #{a[0]} (#{a[1]}) vs #{b[0]} (#{b[1]})"
