@@ -100,10 +100,6 @@ class PushNotification < Notification
 end
 
 class NotificationFactory
-  # TODO: Create a factory method that returns appropriate notification
-  # Input: type (:email, :sms, :push)
-  # Output: instance of appropriate notification class
-  
   def self.create(type)
     case type
     when :email
@@ -177,7 +173,6 @@ class ThemeFactory
 end
 
 class LightThemeFactory < ThemeFactory
-  # TODO: Implement create_button to return LightButton
   # TODO: Implement create_text_field to return LightTextField
   
   def create_button
